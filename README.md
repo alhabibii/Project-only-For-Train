@@ -1,402 +1,296 @@
-# Laporan Proyek Machine Learning - Auliya Sabrina Vyantika
+# **Laporan Proyek Machine Learning - Usamah Putra Firdaus**
 
-## Project Overview
+## **Domain Proyek**
 
-Dalam era digital saat ini, jumlah buku yang tersedia secara daring sangatlah besar. Platform seperti Amazon menyajikan jutaan judul buku dari berbagai genre, penulis, dan tahun terbit. Hal ini menciptakan tantangan tersendiri bagi pengguna dalam menemukan buku yang relevan dan sesuai dengan preferensi mereka. Oleh karena itu, sistem rekomendasi buku menjadi komponen penting dalam meningkatkan pengalaman pengguna dan efisiensi pencarian informasi.
+Diabetes merupakan salah satu penyakit kronis yang paling banyak diderita di seluruh dunia. Berdasarkan data dari World Health Organization (WHO), jumlah penderita diabetes terus meningkat setiap tahunnya, baik di negara maju maupun berkembang. Penyakit ini seringkali tidak menunjukkan gejala pada tahap awal, sehingga banyak penderita yang tidak menyadari bahwa mereka mengidap diabetes hingga komplikasi muncul. Kondisi ini menyebabkan keterlambatan dalam penanganan yang dapat memperburuk kesehatan pasien [[1]](https://www.who.int/news-room/fact-sheets/detail/diabetes).
 
-Dataset yang digunakan dalam proyek ini berasal dari Amazon Web Services, yang mencakup informasi penting mengenai buku seperti ISBN, judul buku, penulis, tahun terbit, dan penerbit. ISBN yang tidak valid telah dihapus, sehingga data yang tersedia sudah bersih dari kesalahan identifikasi. Selain itu, tersedia juga tautan ke gambar sampul buku dalam tiga ukuran berbeda, yang mengarah langsung ke situs Amazon.
+Dalam era digital saat ini, kemajuan teknologi di bidang data science dan machine learning membuka peluang besar untuk mendukung deteksi dini penyakit, termasuk diabetes. Dengan memanfaatkan data kesehatan seperti kadar glukosa darah, tekanan darah, indeks massa tubuh (BMI), dan faktor risiko lainnya, kita dapat membangun sistem prediksi yang membantu tenaga medis maupun individu dalam mengidentifikasi risiko diabetes secara lebih cepat dan akurat.
 
-Permasalahan yang diangkat dalam proyek ini adalah bagaimana memanfaatkan informasi konten buku yang tersedia untuk membangun sistem yang mampu memahami karakteristik buku dan mengelompokkan atau merekomendasikan buku dengan cara yang relevan. Dengan kata lain, proyek ini bertujuan untuk mengimplementasikan pendekatan berbasis konten (content-based filtering) atau clustering untuk mengelompokkan buku berdasarkan kesamaan atribut.
-
-Menurut Ricci, Rokach, dan Shapira (2011), sistem rekomendasi memainkan peran penting dalam berbagai domain e-commerce dan informasi digital karena dapat membantu mengurangi kelebihan informasi (information overload) dan meningkatkan kepuasan pengguna. Oleh karena itu, membangun model rekomendasi atau analisis berbasis atribut buku menjadi solusi strategis yang perlu ditelusuri lebih lanjut.
-
-> **Referensi**:  
-> Ricci, F., Rokach, L., & Shapira, B. (2011). *Introduction to Recommender Systems Handbook*. Springer. https://doi.org/10.1007/978-0-387-85820-3
-
----
+Proyek ini bertujuan untuk membangun model predictive analytics yang mampu mendeteksi kemungkinan seseorang menderita diabetes berdasarkan [data kesehatan](https://www.kaggle.com/datasets/nanditapore/healthcare-diabetes). Dengan pendekatan ini, diharapkan dapat mendukung pengambilan keputusan yang lebih tepat dalam pencegahan maupun penanganan awal diabetes, sehingga menekan angka penderita dan meningkatkan kualitas hidup masyarakat.
 
 ## Business Understanding
-
-Pada bagian ini dilakukan proses klarifikasi terhadap permasalahan yang ingin diselesaikan dalam proyek. Dataset yang digunakan mencakup informasi mengenai buku (ISBN, judul, penulis, tahun terbit, penerbit, dan URL gambar), serta data pengguna dan rating yang diberikan terhadap buku. Informasi ini sangat berpotensi untuk digunakan dalam membangun sistem rekomendasi yang dapat membantu pengguna menemukan buku yang relevan sesuai preferensi mereka.
-
 ### Problem Statements
-
-- **Pernyataan Masalah 1**  
-  Pengguna mengalami kesulitan dalam menemukan buku yang sesuai dengan preferensi mereka karena jumlah pilihan buku yang sangat banyak di platform daring.
-
-- **Pernyataan Masalah 2**  
-  Belum tersedia sistem rekomendasi yang memanfaatkan data atribut konten buku maupun interaksi pengguna untuk menyarankan buku yang relevan.
-
-- **Pernyataan Masalah 3**  
-  Informasi dan metadata buku yang tersedia belum dimanfaatkan secara optimal untuk pengelompokan atau analisis rekomendasi yang lebih personal.
+Dari latar belakang diatas, maka rumusan masalah yang akan dibahas pada proyek ini sebagai berikut:
+- fitur apa saja yang berpengaruh dalam proses modeling predictive analytics terhadap penderita diabetes?
+- Model machine learning apa yang memiliki akurasi tertinggi dan tingkat kesalahan prediksi paling rendah dalam mendeteksi penderita diabetes?
 
 ### Goals
+Berdasarkan Problem Statement yang telah disebutkan, berikut adalah tujuan/goals dari proyek ini sebagai berikut:
+- Menganalisis pentingnya setiap fitur terhadap penderita diabetes.
+- Membandingkan performa beberapa model *machine learning* untuk menemukan model dengan akurasi terbaik dan kesalahan prediksi paling minim.
 
-- **Jawaban Pernyataan Masalah 1**  
-  Membangun sistem rekomendasi buku yang dapat membantu pengguna menemukan buku yang sesuai dengan minat mereka menggunakan pendekatan *Content-based Filtering* dan *Collaborative Filtering*.
+### Solution Statements
+- Melakukan Exploratory Data Analysis (EDA) dengan matriks korelasi untuk melihat fitur-fitur yang berpengaruh
+- Membandingkan 3 performa model *Machine Learning* yaitu Logistic Regression, Decision Tree, dan Random Forest
+- Melakukan Evaluasi model menggunakan Confusion Matrix untuk melihat mana model yang paling sedikit melakukan kesalahan prediksi
 
-- **Jawaban Pernyataan Masalah 2**  
-  Mengimplementasikan pendekatan *Content-based Filtering* untuk merekomendasikan buku berdasarkan kemiripan atribut konten seperti penulis, tahun terbit, dan judul.
+## **Data Understanding**
+Dataset yang digunakan untuk memprediksi seseorang yang beresiko mengalami diabetes. Dataset diambil dari kaggle yang dapat diakses [disini](https://www.kaggle.com/datasets/nanditapore/healthcare-diabetes), dataset ini dipubilkasi oleh [Nandita Pore](https://www.kaggle.com/nanditapore) pada tahun 2023. Dataset ini berisi berbagai atribut yang berkaitan dengan kesehatan, yang dikumpulkan secara cermat untuk mendukung pengembangan model prediktif dalam mengidentifikasi individu yang berisiko menderita diabetes.
 
-- **Jawaban Pernyataan Masalah 3**  
-  Menggunakan pendekatan *Collaborative Filtering* untuk merekomendasikan buku berdasarkan interaksi pengguna, seperti rating yang diberikan oleh pengguna lain dengan preferensi serupa.
+  ![img alt](https://github.com/UsamahPutraFirdaus/Submission_MLTerapan/blob/main/Submission_1_PredictiveAnalytics/img/variable.png?raw=true)
 
----
+Data Healthcare Diabetes yang digunakan terdapat 10 kolom dan 2768 baris data.
 
-## Data Understanding
+### Variable Description
+- Id: Identitas unik untuk setiap entri data.
+- Pregnancies: Jumlah kehamilan yang pernah dialami.
+- Glucose: Konsentrasi glukosa plasma selama 2 jam dalam tes toleransi glukosa oral.
+- BloodPressure: Tekanan darah diastolik (mm Hg).
+- SkinThickness: Ketebalan lipatan kulit trisep (mm).
+- Insulin: Kadar insulin serum selama 2 jam (mu U/ml).
+- BMI: Indeks massa tubuh (berat dalam kg / tinggi dalam m²).
+- DiabetesPedigreeFunction: Skor genetik risiko diabetes berdasarkan silsilah keluarga.
+- Age: Usia dalam tahun.
+- Outcome: Klasifikasi biner yang menunjukkan adanya (1) atau tidak adanya (0) diabetes.
 
-Dataset yang digunakan dalam proyek machine learning ini adalah Book Recommendation System 📚📚 yang diperoleh dari situs [Kaggle](https://www.kaggle.com/code/fahadmehfoooz/book-recommendation-system/input). Dataset ini terdiri dari tiga file utama, yaitu Books.csv, Ratings.csv, dan Users.csv. Dataset ini memuat informasi buku, pengguna, serta rating yang diberikan, yang sangat relevan untuk pengembangan sistem rekomendasi berbasis pembelajaran mesin.
-
-![BOOK](https://github.com/user-attachments/assets/964b165d-e1e4-48cf-a2b6-9b585f74b0f9)
-
-### 1. `Books.csv`
-- **Ukuran Data**: 271.360 baris, 8 kolom
-
-#### ⚠️ Kondisi Data:
-- Kolom `Book-Author`, `Publisher`, dan `Image-URL-L` memiliki **missing values**.
-- Kolom `Year-Of-Publication` bertipe `object`, seharusnya bertipe numerik → perlu pembersihan dan konversi tipe data.
-- Potensi **duplikat** ISBN atau buku dengan ejaan berbeda.
-- Kemungkinan terdapat **outlier** pada tahun terbit (misal < 1000 atau > 2025).
-
-![RATINGS](https://github.com/user-attachments/assets/1abe8cf0-83b5-439f-84f6-13975ed9ef56)
-
-### 2. `Ratings.csv`
-- **Ukuran Data**: 1.149.780 baris, 3 kolom
-
-#### ⚠️ Kondisi Data:
-- Tidak terdapat **missing value**.
-- Tidak ditemukan **duplikat baris** saat inspeksi awal.
-- Nilai `Book-Rating` = 0 biasanya berarti **tidak memberikan rating nyata** → bisa dianggap *noise* dalam analisis preferensi pengguna.
-
-![USER](https://github.com/user-attachments/assets/2fded83a-3db6-401d-88a6-910570eddf8e)
-
-### 3. `Users.csv`
-- **Ukuran Data**: 278.858 baris, 3 kolom
-
-#### ⚠️ Kondisi Data:
-- Kolom `Age` hanya memiliki **168.096 nilai non-null**, sisanya kosong.
-- Terdapat **outlier** pada `Age`, seperti usia 0 atau > 100 → perlu dibersihkan.
-- Kolom `Location` berformat **tidak konsisten**, mengandung gabungan kota, negara, dan kode pos → perlu normalisasi jika dianalisis berdasarkan lokasi.
-
-### Variabel-variabel dalam dataset:
-
-#### Books.csv
-- `ISBN` : Kode unik identifikasi untuk buku
-- `Book-Title` : Judul buku
-- `Book-Author` : Nama penulis buku (hanya penulis pertama jika lebih dari satu)
-- `Year-Of-Publication` : Tahun buku diterbitkan
-- `Publisher` : Nama penerbit buku
-- `Image-URL-S` : URL gambar sampul ukuran kecil
-- `Image-URL-M` : URL gambar sampul ukuran sedang
-- `Image-URL-L` : URL gambar sampul ukuran besar
-
-#### Users.csv
-- `User-ID` : Identifikasi unik untuk pengguna
-- `Location` : Lokasi geografis pengguna (biasanya dalam format City, State, Country)
-- `Age` : Umur pengguna (dapat mengandung nilai kosong atau tidak masuk akal)
-
-#### Ratings.csv
-- `User-ID` : Identifikasi pengguna yang memberikan rating
-- `ISBN` : ISBN dari buku yang diberi rating
-- `Book-Rating` : Nilai rating yang diberikan pengguna (rentang 0–10, dengan 0 berarti tidak ada rating eksplisit)
 
 ### Exploratory Data Analysis (EDA)
+**A. Menangani Missing Valye & Duplicate Data**
+Pada tahap ini, dilakukan pemeriksaan terhadap data yang tidak valid dalam dataset. Hasil pemeriksaan menunjukkan bahwa tidak terdapat nilai null pada kolom mana pun, dan tidak ditemukan data yang duplikat. Oleh karena itu, data dinyatakan siap untuk dianalisis pada tahap berikutnya.
 
-Beberapa tahapan eksplorasi dilakukan terhadap dataset ini, di antaranya:
+**B. EDA - Univariete Analysis**
+1. Distribusi Usia
 
-### Exploratory Data Analysis (EDA)
+  ![img alt](https://github.com/UsamahPutraFirdaus/Submission_MLTerapan/blob/main/Submission_1_PredictiveAnalytics/img/distribusi%20usia.png?raw=true)
+   
+   **Interpretasi Visualisasi Distribusi Usia**
+   
+   - Dataset ini didominasi oleh orang-orang berusia muda, terutama awal 20-an.
+   - cukup sedikit orang yang berusia di atas 60 tahun.
 
-Beberapa tahapan eksplorasi dilakukan terhadap dataset ini, di antaranya:
+3. Distribusi Jumlah Orang perKelompok Usia
 
-![Deskripsi Gambar](https://drive.google.com/uc?export=view&id=1d3MdhtgxVtSkXVvyBIga7NITEOTR9CFd)
+  ![img alt](https://github.com/UsamahPutraFirdaus/Submission_MLTerapan/blob/main/Submission_1_PredictiveAnalytics/img/distribusi%20jumlah%20orang%20per%20kelompok.png?raw=true)
 
-**Jumlah Data Buku**: 
-  Terdapat total 271,360 data buku, yang masing-masing memiliki ISBN unik.
+   >```Ruby
+   ># Buat kategori umur
+   >bins = [20, 30, 40, 50, 60, 70, 80]
+   >labels = ['20-30', '31-40', '41-50', '51-60', '61-70', '71-85']
+   >df['AgeGroup'] = pd.cut(df['Age'], bins=bins, labels=labels, right=True)
+   >```
+   Kode diatas digunakan untuk membuat kelompok umur
+   
+   **Interpretasi Visualisasi Distribusi Jumlah Orang perKelompok Usia**
+   
+   - Kelompok usia muda (20–30) adalah mayoritas populasi.
+   - Populasi mengecil seiring bertambahnya usia, terutama di atas 50 tahun.
+     
+4. Perbandingan Jumlah Penderita Diabetes
 
-**Jumlah Buku Unik berdasarkan ISBN**: 
-  Jumlah buku unik berdasarkan ISBN adalah 271,360, menunjukkan bahwa setiap buku memiliki identifikasi yang unik.
+   ![img alt](https://github.com/UsamahPutraFirdaus/Submission_MLTerapan/blob/main/Submission_1_PredictiveAnalytics/img/perbandingan%20penderita%20diabetes.png?raw=true)
 
-**Jumlah Penulis Unik**:
-  Terdapat 102,022 penulis unik dalam dataset ini, yang menunjukkan keragaman dalam jumlah penulis buku.
+   **Interpretasi Visualisasi Perbandingan Jumlah Penderita Diabetes**
+   
+   - Mayoritas orang dalam dataset **tidak** menderita diabetes.
+   - Namun, sekitar 1 dari 3 orang ternyata menderita diabetes, yang masih cukup signifikan secara proporsi.
+   
+5. Perbandingan Jumlah Kehamilan paling banyak dengan Paling Sedikit
 
-**Jumlah Penerbit Unik**:
-  Dataset ini mencakup 16,807 penerbit unik yang turut mempublikasikan buku-buku dalam sistem.
+   ![img alt](https://github.com/UsamahPutraFirdaus/Submission_MLTerapan/blob/main/Submission_1_PredictiveAnalytics/img/distribusi%20kehamilan%20berdasarkan%20kelompok%20usia.png?raw=true)
 
-**Missing Values**:
-  Terdapat beberapa kolom dengan missing values, di antaranya:
-  - `Book-Author`: 2 missing values
-  - `Publisher`: 2 missing values
-  - `Image-URL-L`: 3 missing values
-  Kolom lainnya tidak mengandung nilai yang hilang.
+   **Interpretasi Visualisasi Perbandingan Jumlah Kehamilan Paling Banyak dengan Paling Sedikit**
+   
+   - Distribusi jumlah kehamilan condong ke angka kecil: Mayoritas orang memiliki kehamilan 0–4 kali.
+   - Jumlah kehamilan lebih dari 10 berpotensi sebagai outlier
+   
+**B. EDA - Multivariete Analysis**
+1. Rata-rata Kehamilan Berdasarkan perKelompok Usia
 
-**Kualitas Data**:
-  Kolom ISBN, Book-Title, Year-Of-Publication, dan Image-URL-S/M tidak memiliki missing values, sehingga data pada kolom-kolom tersebut cukup lengkap.
+   ![img alt](https://github.com/UsamahPutraFirdaus/Submission_MLTerapan/blob/main/Submission_1_PredictiveAnalytics/img/rata%20rata%20kehamilan%20per%20kelompok%20usia.png?raw=true)
 
-![Deskripsi Gambar](https://drive.google.com/uc?export=view&id=1fypKiH-vTV_8arYeAgWj6k-FhtYHN7Ke)
+   **Interpretasi Visualisasi Rata-rata Kehamilan Berdasarkan perKelompok Usia**
+   
+   - Puncak rata-rata kehamilan terjadi pada usia 41–50 tahun, dan menurun setelahnya.
+   - Data ini menunjukkan bahwa sebagian besar perempuan mengalami jumlah kehamilan tertinggi di usia pertengahan hingga awal lanjut usia.
 
-**Jumlah Data Rating**: 
-  Terdapat 1.149.780 data rating yang diberikan oleh pengguna.
+2. Jumlah Penderita Diabetes berdasarkan perKelompok Usia
 
-**Rata-Rata Rating**: 
-  Rata-rata rating (mean) yang diberikan adalah sekitar 2.87 dengan standar deviasi sebesar 3.85, menunjukkan penyebaran rating yang cukup luas.
+   ![img alt](https://github.com/UsamahPutraFirdaus/Submission_MLTerapan/blob/main/Submission_1_PredictiveAnalytics/img/jumlah%20penderita%20diabetes%20perkelompok%20usia.png?raw=true)
 
-**Rating Minimum dan Maksimum**: 
-  Rating minimum adalah 0, yang biasanya menandakan tidak adanya rating eksplisit dari pengguna. Rating maksimum adalah 10, yang merupakan skor tertinggi yang bisa diberikan pada sebuah buku.
+   **Interpretasi Visualisasi Jumlah Penderita Diabetes berdasarkan perKelompok Usia**
 
-**Distribusi Rating**:
-  Kuartil ke-1 (25%), ke-2 (median/50%), dan ke-3 (75%) masing-masing bernilai 0, 0, dan 7, mengindikasikan bahwa sebagian besar data rating yang ada adalah 0. Hal ini berarti banyak interaksi pengguna tidak disertai dengan rating eksplisit.
+   - Jika dilihat langsung dari visualisasi diatas, usia 20 hingga 30 memiliki penderita diabetes yang sangat banyak. Namun jika melihat dari visualisasi Distribusi Jumlah Orang perKelompok Usia, kelompok usia 20 - 30 memiliki jumlah yang sangat banyak dibandingkan dengan kelompok usia lainnya. Kelompok usia 20-30 hanya sekitar -+ 17% penderita diabetes. Dibandingkan dengan kelompok usia 41-50, tingkat penderita diabetes mencapai hampir 55%
 
-**Kesimpulan**:
-  Sebagian besar entri pada kolom `Book-Rating` bernilai 0, yang berarti banyak interaksi pengguna tidak disertai dengan rating eksplisit. Oleh karena itu, untuk membangun sistem rekomendasi berbasis rating, disarankan untuk memfilter hanya data dengan `Book-Rating` > 0.
+3. Matriks Korelasi antar Kolom
 
-![Deskripsi Gambar](https://drive.google.com/uc?export=view&id=1mTNyDkxqCWCY0dvbSUS05NOKCa-3Q_zq)
+   ![img alt](https://github.com/UsamahPutraFirdaus/Submission_MLTerapan/blob/main/Submission_1_PredictiveAnalytics/img/matriks%20korelasi.png?raw=true)
+   
+   **Interpretasi Visualisasi Jumlah Penderita Diabetes berdasarkan perKelompok Usia**
+   - Glucose adalah fitur paling signifikan dalam menentukan kemungkinan diabetes.
+   - BMI, Age, dan jumlah kehamilan (Pregnancies) juga berkontribusi tetapi tidak sekuat Glucose.
 
-**Jumlah Data Rating**:
-  Terdapat 1.149.780 data rating yang diberikan oleh pengguna.
+**C. Indentify Outliers**
+Untuk mengatasi outlier, salah satu metode yang umum digunakan adalah metode IQR (Interquartile Range) dengan visualisasi menggunakan boxplot. Berikut penjelasan mengenai metode IQR dan visualisasi boxplot:
 
-**Jumlah Pengguna Unik**:
-  Terdapat 105.283 pengguna unik yang memberikan rating.
+1. Apa itu IQR?
+Interquartile Range (IQR) adalah selisih antara kuartil ketiga (Q3) dan kuartil pertama (Q1) dari suatu data. Q1 adalah nilai yang membagi 25% data pertama (bagian bawah), sedangkan Q3 adalah nilai yang membagi 75% data (bagian atas). IQR digunakan untuk menggambarkan sebaran nilai yang berada di tengah 50% data.
 
-**Jumlah Buku Unik yang Diberi Rating**:
-  Terdapat 340.556 buku unik yang diberikan rating.
+2. Visualisasi Boxplot
+Checking Outliers
 
-**Missing Values**:
-  Tidak ada missing value pada dataset `ratings` karena semua kolom (`User-ID`, `ISBN`, dan `Book-Rating`) memiliki nilai yang lengkap (0 missing value).
+Langkah-langkah Deteksi Outlier dengan IQR:
+- Hitung Q1 dan Q3
+   - Q1 adalah nilai pada persentil ke-25 dari data.
+   - Q3 adalah nilai pada persentil ke-75 dari data.
+- Hitung IQR
+   - IQR = Q3 − Q1
+- Tentukan Batas Deteksi Outlier
+   - Batas Bawah (Lower Bound) = Q1 − 1.5 × IQR
+   - Batas Atas (Upper Bound) = Q3 + 1.5 × IQR
+- Identifikasi Outlier
+   - Nilai yang lebih kecil dari batas bawah atau lebih besar dari batas atas dikategorikan sebagai outlier, yaitu data yang menyimpang jauh dari nilai mayoritas.
+ 
+   ![img alt](https://github.com/UsamahPutraFirdaus/Submission_MLTerapan/blob/main/Submission_1_PredictiveAnalytics/img/indentify%20outliers.png?raw=true)
 
+   Pada kolom `Pregnancies`, `Glucose`, `BloodPressure`, `SkinThickness`, `Insulin`, `BMI`, dan `DiabetesPedigreeFunction` terdeteksi cukup banyak outlier. Sementara itu, kolom `Age` juga menunjukkan indikasi adanya outlier. Namun, setelah ditinjau lebih lanjut, nilai-nilai pada kolom Age masih berada dalam rentang yang wajar sehingga tidak dihapus dari data.
 
-![Deskripsi Gambar](https://drive.google.com/uc?export=view&id=1lvUiBhbjuwYdlREGIliirpOb4w9NzkYV)
+## **Data Preparation**
+Pada tahap ini, dilakukan proses transformasi data agar sesuai dan siap digunakan dalam proses pemodelan, berikut adalah beberapa persiapan yang perlu dilakukan sebagai berikut:
 
-**Jumlah Data Pengguna**:
-  Dataset `users` berisi 278.858 entri pengguna.
-
-**Jumlah Data yang Tidak Null**:
-  - `User-ID`: 278.858 data tidak null.
-  - `Location`: 278.858 data tidak null.
-  - `Age`: 168.096 data tidak null, yang menunjukkan adanya nilai kosong pada kolom usia.
-
-**Tipe Data**:
-  - `User-ID`: integer (`int64`).
-  - `Location`: string (`object`).
-  - `Age`: angka desimal (`float64`).
-
-![Deskripsi Gambar](https://drive.google.com/uc?export=view&id=1-fIKYX0EP7A_BN_m-037xygJ0T6-pzX0)
-
-**Statistik Deskriptif Kolom 'Age':**
-- Jumlah Data: 168.096
-- Rata-rata Umur: 34.75 tahun
-- Standar Deviasi: 14.43 tahun
-- Umur Minimum: 0 tahun (kemungkinan data yang tidak valid)
-- Kuartil:
-- 25%: 24 tahun
-- 50% (Median): 32 tahun
-- 75%: 44 tahun
-- Umur Maksimum: 244 tahun (kemungkinan data yang tidak valid)
-
-**Jumlah Pengguna Unik:**
-- 278.858 pengguna unik.
-
-**Jumlah Lokasi Unik:**
-- 57.339 lokasi unik.
-
----
-
-## Data Preparation
-
-### Handling Missing Value
-
-Langkah pertama dalam tahapan pembersihan data adalah menangani missing value. Pada dataset yang digunakan, terdapat beberapa kolom yang memiliki missing values, terutama pada kolom `Book-Title`, `Book-Author`, `Year-Of-Publication`, `Publisher`, serta kolom gambar (`Image-URL-S`, `Image-URL-M`, `Image-URL-L`). Selain itu, kolom `Age` juga memiliki banyak missing value.
-
-- **Solusi**: Untuk menjaga kualitas data, dilakukan pembuangan baris yang memiliki missing values menggunakan `dropna()`. Langkah ini memastikan bahwa hanya data yang lengkap dan valid yang digunakan dalam analisis selanjutnya.
+### Drop Kolom
+Pada tahap ini terdapat kolom yang tidak digunakan dalam modeling yaitu kolom `Id`,  Kolom ini akan dihapus menggunakan fungsi `drop()`.
 
 ### Handling Outliers
+Karena saat dilakukan pengecekan outlier ditemukan cukup banyak outlier, maka outliers tersebut perlu dihapus agar dataset menjadi lebih bersih dan siap digunakan untuk proses modeling. Berikut adalah tahapan untuk menghapus outliers :
 
-Dalam dataset ini, terdapat beberapa nilai yang dianggap sebagai outlier, seperti data usia pengguna (`Age`) yang lebih rendah dari 5 tahun atau lebih tinggi dari 99 tahun. Hal ini dapat menyebabkan distorsi dalam analisis dan model.
+1. Menentukan Kolom yang Akan Dicek
+- Pertama, kita tentukan kolom-kolom mana saja dalam data yang berisi angka (data numerik) dan akan diperiksa apakah mengandung outlier atau tidak.
 
-- **Solusi**: Usia yang tidak realistis difilter untuk memastikan hanya usia yang berada dalam rentang 5 hingga 99 tahun yang dipertimbangkan. Langkah ini penting untuk menjaga validitas data yang akan digunakan dalam pembuatan model.
+2. Menghitung Kuartil dan IQR Untuk setiap kolom:
+   - Hitung Q1 (kuartil pertama) → batas bawah 25% data terendah.
+   - Hitung Q3 (kuartil ketiga) → batas atas 25% data tertinggi.
+   - Lalu hitung IQR (Interquartile Range), yaitu selisih antara Q3 dan Q1. IQR menunjukkan rentang "normal" dari data tersebut.
 
-### Handling Duplicates
+3. Menentukan Batas Outlier
+- Setelah IQR diketahui, kita tentukan batas bawah dan batas atas dari nilai yang dianggap wajar:
+   - Batas bawah = Q1 dikurangi 1.5 × IQR.
+   - Batas atas = Q3 ditambah 1.5 × IQR.
+   - Nilai yang berada di luar kedua batas ini dianggap sebagai outlier, yaitu data yang terlalu jauh berbeda dari data lainnya.
 
-Sebelum melanjutkan ke tahapan analisis lebih lanjut, perlu diperiksa apakah ada duplikat dalam dataset yang dapat mempengaruhi hasil analisis.
+4. Mengidentifikasi Outlier
+- Untuk setiap kolom, kita periksa apakah ada nilai yang berada di luar batas bawah atau batas atas tersebut. Jika ada, maka baris data tersebut dicatat sebagai data yang mengandung outlier.
 
-- **Solusi**: Dilakukan pengecekan dan penghapusan baris duplikat menggunakan metode `drop_duplicates()`. Ini memastikan bahwa tidak ada data yang terhitung lebih dari sekali, yang dapat memengaruhi hasil model rekomendasi.
+5. Menggabungkan Semua Outlier
+- Setelah seluruh kolom diperiksa, semua baris yang mengandung outlier dari salah satu kolom atau lebih dikumpulkan dalam satu daftar.
 
-### Standarisasi dan Normalisasi Data
+6. Menghapus Baris Outlier
+- Semua baris data yang mengandung outlier kemudian dihapus dari dataset. Ini dilakukan agar data menjadi lebih bersih dan hasil analisis atau pemodelan tidak terganggu oleh nilai-nilai ekstrem.
 
-Setelah menangani missing values dan outliers, penting untuk memastikan bahwa data berada dalam format yang standar dan siap digunakan dalam model.
+   ![img alt](https://github.com/UsamahPutraFirdaus/Submission_MLTerapan/blob/main/Submission_1_PredictiveAnalytics/img/outliers%20setelah%20dihapus.png?raw=true)
 
-- **Normalisasi Rating**: Rating buku yang diterima oleh pengguna memiliki rentang nilai yang berbeda-beda. Oleh karena itu, dilakukan normalisasi pada nilai rating dengan metode **Min-Max Normalization**, mengubah nilai rating ke dalam rentang 0–1 untuk memastikan bahwa model dapat beroperasi dengan lebih stabil.
+   Visualiasi diatas menampilkan hasil setelah outliers dihapus
 
-### Content-Based Filtering Preparation
+### Melakukan Split Dataset
+Karena fokus prediksi terletak pada variabel Outcome sebagai target untuk menentukan tingkat akurasi dalam mengklasifikasikan apakah seseorang mengalami menderita diabetes atau tidak, maka kolom tersebut dipisahkan dari dataset utama dan disimpan dalam variabel terpisah. Dataset kemudian dibagi menjadi dua bagian: data training yang digunakan untuk melatih model, dan data testing yang digunakan untuk menguji performa model terhadap data yang belum pernah dilihat sebelumnya. Pembagian ini dilakukan dengan rasio 75% untuk training dan 25% untuk testing, menggunakan fungsi train_test_split dari pustaka sklearn.
 
-#### 1. **Menggabungkan Semua Data**
-Proses penggabungan ketiga dataset utama (`Books.csv`, `Ratings.csv`, dan `Users.csv`) dilakukan berdasarkan kolom kunci seperti `ISBN` untuk buku dan `User-ID` untuk pengguna. Hal ini dilakukan agar informasi tentang pengguna, buku, dan rating terintegrasi dalam satu dataset yang utuh.
-
-#### 2. **Persiapan Kolom Buku**
-Kolom `ISBN`, `Book-Title`, dan `Book-Author` dikonversi menjadi list dan dibentuk menjadi dictionary. Struktur ini akan digunakan dalam pembuatan sistem rekomendasi berbasis konten, yang mengandalkan metadata buku seperti judul dan pengarang.
-
-### Collaborative Filtering Preparation
-
-#### 1. **Encode Label**
-Untuk memungkinkan penggunaan data kategori dalam model TensorFlow, dilakukan encoding untuk kolom `User-ID` dan `ISBN` ke dalam format numerik. Hal ini penting karena model tidak dapat memproses data kategori langsung, dan encoding menjadi kunci untuk mengonversi data menjadi format yang dapat diproses oleh model berbasis embedding.
-
-#### 2. **Pembuatan Variabel Input dan Target**
-Setelah data berhasil diencoding, variabel input (`x`) yang berisi pasangan `(user, book)` dibuat, sementara target (`y`) berisi rating yang telah dinormalisasi. Format ini memungkinkan model untuk mempelajari hubungan antara pengguna dan buku.
-
-#### 3. **Split Data**
-Dataset dibagi menjadi dua bagian, 80% untuk training dan 20% untuk validasi. Pembagian ini dilakukan untuk memastikan model dapat diuji untuk mengukur generalisasi dan kemampuannya untuk bekerja pada data yang tidak terlihat sebelumnya.
-
-### Ekstraksi Fitur TF-IDF
-Ekstraksi fitur menggunakan **TF-IDF (Term Frequency-Inverse Document Frequency)** dilakukan untuk mengukur pentingnya kata-kata dalam deskripsi buku relatif terhadap kumpulan dokumen lainnya. Fitur ini penting untuk memahami kecocokan antara buku berdasarkan deskripsi teks, yang digunakan dalam rekomendasi berbasis konten.
-
-### Balancing Data
-Jika dataset yang digunakan menunjukkan adanya ketidakseimbangan antara rating atau kelas, dilakukan teknik balancing data untuk memastikan model dapat belajar dengan lebih adil tanpa bias terhadap kelas yang lebih banyak.
-
----
+```Ruby
+x = df.drop(["Outcome"],axis=1)
+y = df["Outcome"]
+x_train , x_test , y_train , y_test = train_test_split(x,y,test_size=0.25,random_state=42,stratify = y)
+```
 
 ## Modeling
+Pada tahap modeling, dilakukan pemilihan algoritma yang akan digunakan dalam membangun model machine learning, serta proses pengembangan dan pelatihan model tersebut agar dapat dimanfaatkan dalam analisis prediksi. Tiga algoritma berikut akan diuji terlebih dahulu untuk mengevaluasi performa dan menentukan model dengan hasil terbaik, yaitu:
 
-Tahapan ini menjelaskan proses pembuatan dan evaluasi model sistem rekomendasi yang digunakan dalam proyek. Dua pendekatan utama yang digunakan adalah **Content-Based Filtering** dan **Collaborative Filtering**. Selain penjelasan, hasil top-N rekomendasi juga dilampirkan sebagai bukti keberhasilan model dalam memberikan saran buku kepada pengguna.
+**1. Algoritma Logistic Regression**
 
-## 1. Content-Based Filtering
-- Menggunakan informasi dari fitur konten buku, seperti **nama author**.
-- Sistem mencari kemiripan antar buku menggunakan teknik **TF-IDF** dan **Cosine Similarity** berdasarkan fitur `author`.
-- Rekomendasi yang dihasilkan adalah buku yang memiliki **kemiripan tinggi** dengan buku yang pernah disukai pengguna.
+  Regresi logistik adalah teknik analisis data yang menggunakan matematika untuk menemukan hubungan antara dua faktor data. Kemudian menggunakan hubungan ini untuk memprediksi nilai dari salah satu faktor tersebut berdasarkan faktor yang lain. Prediksi biasanya memiliki jumlah hasil yang terbatas, seperti ya atau tidak.
 
-### Cara Kerja
-1. Membersihkan data `author` dengan menghapus karakter aneh.
-2. Menggunakan `TfidfVectorizer` untuk membentuk matriks TF-IDF dari kolom `author`.
-3. Menghitung **cosine similarity** antar vektor buku.
-4. Mengambil top-N buku paling mirip dari similarity matrix.
+Model ini bekerja dengan memodelkan hubungan antara satu atau lebih variabel independen dan variabel dependen biner (dua kelas) menggunakan fungsi logistik (sigmoid). Pada algoritma ini digunakan parameter `solver='lbfgs'` untuk optimasi, `max_iter=500` sebagai batas maksimum iterasi, dan `random_state=42` untuk memastikan hasil model tetap konsisten.
+```Ruby
+lr_model = LogisticRegression(solver='lbfgs', max_iter=500, random_state=42)
+```
 
-### Kelebihan
-- Tidak membutuhkan data dari pengguna lain.
-- Cocok untuk kondisi dengan data pengguna terbatas (cold-start user).
+**2. Algoritma Decision Tree**
 
-### Kekurangan
-- Cenderung memberikan rekomendasi yang mirip terus-menerus (kurang variasi).
-- Tidak bisa merekomendasikan buku yang belum pernah disukai siapapun.
+  Decision trees adalah algoritme pembelajaran yang diawasi dan bersifat non-parametrik, yang digunakan untuk tugas klasifikasi dan regresi. Memiliki struktur pohon hierarkis, yang terdiri dari simpul akar, cabang, simpul internal dan simpul daun.
 
-### 📊 Contoh Output Rekomendasi
-Rekomendasi berdasarkan buku **Passenger to Frankfurt: An extravaganza,**:
+Decision Tree membagi data berdasarkan fitur yang paling baik memisahkan kelas target menggunakan metrik seperti Gini Impurity. Pada implementasinya, model ini menggunakan parameter `max_depth=5` untuk menghindari overfitting,` criterion='gini'` sebagai metode pemilihan split, dan `random_state=42` untuk menjaga konsistensi hasil.
+```Ruby
+dt_model = DecisionTreeClassifier(max_depth=5, criterion='gini', random_state=42)
+```
 
-![7](https://github.com/user-attachments/assets/f2ba62c0-d321-48dd-9874-61d0f23d17f2)
+**3. Algoritma Random Forest**
 
-## 2. Collaborative Filtering
+  Random Forest adalah algoritma dalam machine learning yang digunakan untuk pengklasifikasian dataset. Karena fungsinya bisa digunakan untuk banyak dimensi dengan berbagai skala dan performa yang tinggi. Klasifikasi ini dilakukan melalui penggabungan tree dalam decision tree dengan cara training dataset.
 
-Collaborative Filtering adalah pendekatan sistem rekomendasi yang memanfaatkan **interaksi historis pengguna**, seperti **rating terhadap item (buku)**. Sistem ini mencoba mempelajari pola preferensi pengguna berdasarkan kesamaan perilaku dengan pengguna lain.
+Random Forest merupakan algoritma ensemble learning yang menggabungkan banyak Decision Tree untuk meningkatkan akurasi dan stabilitas prediksi. Model ini membangun beberapa pohon keputusan dan menggabungkan hasil prediksinya. Parameter yang digunakan adalah `n_estimators=50` (jumlah pohon), `max_depth=12` (kedalaman maksimum pohon), `random_state=42` untuk replikasi hasil, dan `n_jobs=-1` yang berarti proses training dilakukan secara paralel menggunakan seluruh core CPU.
+```Ruby
+rf_model = RandomForestClassifier(n_estimators=50, max_depth=12, random_state=42, n_jobs=-1)
+```
 
-Dalam proyek ini, digunakan model **Neural Collaborative Filtering (NCF)** dengan arsitektur kustom bernama **RecommenderNet**, yang dibangun menggunakan TensorFlow dan Keras. Model ini melakukan pembelajaran representasi (embedding) untuk pengguna dan buku, kemudian memprediksi **seberapa besar kemungkinan seorang pengguna menyukai sebuah buku**.
-
-### Cara Kerja Model
-- Data interaksi pengguna dan buku disiapkan dalam bentuk pasangan `(user_id, isbn)` dengan label rating.
-- Setiap user dan buku diubah menjadi vektor embedding berdimensi tetap.
-- Vektor tersebut digabungkan dan diproses melalui lapisan dense untuk mempelajari hubungan non-linear antara user dan buku.
-- Model dilatih dengan **loss function Binary Crossentropy** dan **metrik evaluasi RMSE**.
-- Setelah pelatihan, sistem dapat memprediksi skor rating dari setiap kombinasi user-buku yang belum pernah dilihat sebelumnya.
-
-### Kelebihan
-- Mampu menangkap pola kompleks antar user dan item.
-- Dapat memberikan rekomendasi yang lebih **personal** karena mempertimbangkan interaksi pengguna lainnya.
-- Menghasilkan **top-N rekomendasi** berdasarkan prediksi rating tertinggi.
-
-### Kekurangan
-- Membutuhkan data rating yang cukup banyak, rentan terhadap **sparsity**.
-- Tidak optimal untuk pengguna/item baru (**cold-start problem**).
-
-### 🏆 Hasil Top-N Rekomendasi (Sample Output)
-
-📌 **Rekomendasi untuk satu pengguna secara acak**:
-
-![8](https://github.com/user-attachments/assets/3e3ed645-d3f3-4a2d-b205-0ca866f8486c)
-
-Dengan pendekatan ini, sistem dapat memberikan saran buku secara cerdas dan dinamis berdasarkan preferensi pembaca yang serupa, bukan hanya berdasarkan isi buku.
-
----
 ## Evaluation
+Metrik evaluasi yang digunakan dalam proyek ini ialah sebagai berikut:
 
-### Metrik Evaluasi yang Digunakan
+### A. Classification Report
 
-Dalam proyek ini, digunakan dua pendekatan sistem rekomendasi, yaitu:
+   ![img alt](https://github.com/UsamahPutraFirdaus/Submission_MLTerapan/blob/main/Submission_1_PredictiveAnalytics/img/tp_tn_fp_fn.png?raw=true)
 
-1. **Collaborative Filtering (menggunakan RecommenderNet berbasis deep learning)**
-2. **Content-Based Filtering (menggunakan cosine similarity)**
+Terdapat 4 label pada matriks confusion seperti yang terlihat di gambar, yaitu TP, TN, FP, dan FN. a. True Positive (TP) merupakan jumlah data pada positif yang ditebak dengan benar. b. True Negative (TN) merupakan jumlah data pada negatif yang ditebak dengan benar. c. False Positive (FP) merupakan jumlah data yang ditebak dengan salah karena diprediksi positif, sedangkan aslinya adalah negatif. d. False Negative (FN) merupakan jumlah data yang ditebak dengan salah karena diprediksi negatif, sedangkan aslinya adalah positif.
 
-Setiap pendekatan menggunakan metrik evaluasi yang berbeda, disesuaikan dengan karakteristik masalah dan data.
+1. Precision
 
----
+   ![img alt](https://github.com/UsamahPutraFirdaus/Submission_MLTerapan/blob/main/Submission_1_PredictiveAnalytics/img/precision.png?raw=true)
 
-#### 1. Root Mean Squared Error (RMSE) – untuk Collaborative Filtering
+   Dari seluruh prediksi positif, berapa yang benar-benar positif.
 
-- **Definisi:**  
-  RMSE digunakan untuk mengukur sejauh mana prediksi model mendekati nilai rating aktual. Metrik ini sangat peka terhadap kesalahan prediksi yang besar karena menghitung akar dari rata-rata kuadrat selisih prediksi dan nilai sebenarnya.
+2. Recall
+   
+   ![img alt](https://github.com/UsamahPutraFirdaus/Submission_MLTerapan/blob/main/Submission_1_PredictiveAnalytics/img/recal.png?raw=true)
 
-- **Formula:**
+   Dari semua kasus positif aktual, berapa banyak yang berhasil diprediksi dengan benar.
 
-![R](https://github.com/user-attachments/assets/47948cde-13f4-494e-94f7-b69843e3ec69)
+3. F1-Score
 
-- **Alasan Penggunaan:**  
-  Cocok digunakan dalam masalah regresi seperti prediksi rating buku karena mempertimbangkan akurasi absolut dari prediksi secara keseluruhan.
+   ![img alt](https://github.com/UsamahPutraFirdaus/Submission_MLTerapan/blob/main/Submission_1_PredictiveAnalytics/img/f1.png?raw=true)
 
----
+   Harmoni antara precision dan recall. Semakin tinggi, semakin baik keseimbangan keduanya.
 
-#### 2. Precision@N – untuk Content-Based Filtering
+4. Average (Macro vs Weighted)
 
-- **Definisi:**  
-  Precision@N mengukur berapa banyak dari N item yang direkomendasikan yang benar-benar relevan dengan minat pengguna.
+   ![img alt](https://github.com/UsamahPutraFirdaus/Submission_MLTerapan/blob/main/Submission_1_PredictiveAnalytics/img/avg.png?raw=true)
 
-- **Formula:**
-  
-![P](https://github.com/user-attachments/assets/6e31d9ca-4cca-470a-b817-35d6ebf45bbe)
+   - Macro Average : Menghitung metrik (precision, recall, f1) secara rata-rata antar kelas, tanpa memperhatikan jumlah sampel (support) pada tiap kelas.
+   - Weighted Average : Sama seperti macro, tetapi diberi bobot sesuai jumlah sampel (support) di tiap kelas.
 
-- **Alasan Penggunaan:**  
-  Sesuai untuk mengevaluasi skenario top-N recommendation seperti pada pendekatan berbasis konten, terutama untuk mengecek relevansi rekomendasi yang diberikan.
+5. Hasil Classficiation Report
 
----
+   ![img alt](https://github.com/UsamahPutraFirdaus/Submission_MLTerapan/blob/main/Submission_1_PredictiveAnalytics/img/akurasi.png?raw=true)
 
-### Hasil Evaluasi
+  - Logistic Regression: Akurasi 78.2%, performa terendah dari ketiga model, dengan recall kelas 1 hanya 51.9% yang menunjukkan banyak false negative.
+  - Decision Tree: Akurasi 84.5%, lebih baik dari Logistic Regression dengan F1-Score kelas 1 sebesar 71.7%, menandakan model ini cukup seimbang.
+  - Random Forest: Akurasi tertinggi 99.1%, dengan precision dan recall kelas 1 nyaris sempurna (1.000 dan 0.973), menunjukkan performa sangat baik dan overfitting bisa menjadi perhatian.
 
-#### Collaborative Filtering (RecommenderNet)
+Kesimpulan: Random Forest memberikan performa terbaik secara keseluruhan, namun perlu dipastikan bahwa model tidak overfit terhadap data pelatihan. Inilah model yang paling andal berdasarkan metrik yang ditampilkan.
+   
+### B. Confusion Matrix
 
-- **Visualisasi RMSE:**
+   ![img alt](https://github.com/UsamahPutraFirdaus/Submission_MLTerapan/blob/main/Submission_1_PredictiveAnalytics/img/Confusion_Matrix.png?raw=true)
 
-  ![RMSE Graph](https://drive.google.com/uc?export=view&id=183pG59ea2YWJiEElaH8rwI6X4E7IY2kp)
+Berdasarkan hasil Confusion Matrix dari ketiga model yang diuji, model Random Forest menunjukkan performa terbaik, dengan hanya 5 kesalahan prediksi pada kelas positif (1), dan tidak ada kesalahan pada kelas negatif (0). Sebaliknya, model Logistic Regression memberikan hasil terburuk, dengan 40 kesalahan prediksi pada kelas negatif (0) dan 88 kesalahan pada kelas positif (1). Hal ini menunjukkan bahwa Logistic Regression kurang efektif dalam mendeteksi penderita diabetes
 
-- **Train RMSE akhir:** ~0.55  
-- **Validation RMSE akhir:** ~0.49  
+### Perbandingan Hasil Evaluasi Model
 
-Model menunjukkan kecenderungan konvergen selama proses pelatihan hingga epoch ke-100. Namun terdapat sedikit perbedaan antara error pelatihan dan validasi yang mengindikasikan potensi overfitting.
+Dari hasil kedua skema evaluasi model (Classification Report dan Confusion Matrix) hasil menunjukkan bahwa Random Forest memberikan hasil performa terbaik. Dimana akurasi mencapai 99.1% dan kesalahan prediksi hanya 5 kesalahan pada kelas positif dan tidak ada kesalahan prediksi pada kelas negatif.
 
----
+## **Kesimpulan**
+Berdasarkan serangkaian proses analisis data dan pembangunan model machine learning terhadap dataset diabetes dari Kaggle, diperoleh beberapa poin utama sebagai berikut:
+1. Fitur Penting yang Mempengaruhi Diabetes
+Berdasarkan analisis korelasi dan visualisasi, fitur Glucose, BMI, dan Age memiliki pengaruh paling signifikan terhadap status diabetes seseorang. Fitur Glucose menempati posisi tertinggi dalam korelasi dengan target variabel.
 
-#### Content-Based Filtering
+2. Distribusi Usia Penderita Diabetes
+Analisis usia menunjukkan bahwa kelompok usia 41–50 tahun merupakan kelompok dengan jumlah penderita diabetes terbanyak. Hal ini mengindikasikan pentingnya pencegahan dan deteksi dini di kelompok usia tersebut.
 
-- **Precision@10 (simulasi):** ~0.60  
-  Berdasarkan uji coba manual terhadap 10 rekomendasi teratas, sekitar 6 buku sesuai dengan minat pengguna, menghasilkan precision sebesar 60%.
+3. Perbandingan Model
+Tiga model telah dibangun dan dibandingkan, yaitu:
+   - Logistic Regression
+   - Decision Tree
+   - Random Forest
+Pada dataset ini model Random Forest menghasilkan kesalahan prediksi terendah berdasarkan analisis confusion matrix, menjadikannya model dengan performa terbaik di antara ketiganya.
 
----
+4. Model Terbaik untuk Prediksi Diabetes
+Dengan hasil confusion matrix model Random Forest menunjukkan jumlah kesalahan paling sedikit, serta mendapatkan akurasi paling tinggi dibandingkan dengan model lainnya. Hal ini menunjukkan bahwa Model Random Forest merupakan model yang paling baik performanya dalam mendeteksi Penderita Diabetes
 
-### Interpretasi dan Hubungan dengan Business Understanding
 
-- **Problem Statement:**  
-  Sistem ini dirancang untuk membantu pengguna menemukan buku yang relevan dari jumlah koleksi yang sangat besar.
-
-- **Apakah tujuan proyek tercapai?**  
-  ✅ Ya  
-  - *Collaborative Filtering* mampu memprediksi rating pengguna dengan RMSE < 0.6  
-  - *Content-Based Filtering* memberikan rekomendasi yang cukup relevan dengan precision@10 sebesar 60%
-
-- **Dampak terhadap bisnis dan pengguna:**  
-  Sistem rekomendasi yang baik akan meningkatkan **kepuasan pengguna**, mempercepat proses pencarian buku, serta mendorong **interaksi lebih lanjut**, yang semuanya berdampak positif terhadap **retensi dan konversi pengguna** dalam konteks bisnis.
-
----
-
-### Saran Perbaikan Model
-
-#### Collaborative Filtering:
-- Tambahkan teknik regularisasi seperti **dropout** atau **L2 regularization**
-- Gunakan **early stopping** untuk mencegah overfitting
-- Eksperimen dengan **arsitektur model** yang lebih kompleks atau sebaliknya lebih sederhana
-
-#### Content-Based Filtering:
-- Gunakan **fitur tambahan** seperti genre, publisher, tahun terbit, deskripsi buku
-- Gabungkan dengan **Collaborative Filtering** menjadi model hybrid untuk hasil yang lebih baik
+# Reference:
+[1] World Health Organization, "Diabetes", 2024. https://www.who.int/news-room/fact-sheets/detail/diabetes (accessed May. 8, 2025)
